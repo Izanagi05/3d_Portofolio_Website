@@ -11,7 +11,7 @@ export default defineConfig({
   },
 },
   server: {
-    port: process.env.PORT,
+    port: 5173,
   },
   plugins: [vercel()],
 });
