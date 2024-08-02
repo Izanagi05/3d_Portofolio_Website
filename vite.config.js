@@ -1,6 +1,6 @@
-// vite.config.js
-import { defineConfig } from 'vite'
-
+import { defineConfig } from 'vite';
+import vercel from 'vite-plugin-vercel';
+ 
 export default defineConfig({
   build: {
     rollupOptions: {
@@ -9,5 +9,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ['gsap', 'three', 'dat.gui'],
   },
-}
-})
+},
+  server: {
+    port: process.env.PORT,
+  },
+  plugins: [vercel()],
+});
