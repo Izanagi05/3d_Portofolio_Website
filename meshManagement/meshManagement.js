@@ -16,6 +16,7 @@ dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5
       // meshes.forEach(mesh => scene.add(mesh))
       console.log("satet", meshes?.children[0]?.children[0]?.children);
       meshes?.children[0]?.children[0]?.children[72]?.children[0]?.children[0].position.set(1.15, 1.3,0.53) 
+      // setupMyGui(meshes, camera);
       if (onMeshLoaded) {
         onMeshLoaded(meshes); // Memanggil callback dengan parameter cube
       }

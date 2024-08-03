@@ -2,6 +2,8 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
 
 module.exports = {
   entry:'./src/index.js',  
@@ -23,38 +25,27 @@ module.exports = {
             'css-loader'
         ]
     },
-      {
-        test: /\.(html)$/,
-        use:
-        [
-            'html-loader'
-        ]
+    {
+      test: /\.html$/i,
+      loader: "html-loader",
     },
-      {
-        test: /\.(png|jpe?g|gif|svg)$/,
-        use: [
-          {
+    {
+      test: /\.(jpg|png|gif|svg)$/i,
+      type: 'asset/resource', 
+  },
+  {
+    test: /\.(mp3)$/,
+    use:
+    [
+        {
             loader: 'file-loader',
-            options: {
-              name: 'images/[name].[hash:7].[ext]', // Menentukan nama dan lokasi output gambar
-            },
-          },
-        ],
-        
-      },
-      {
-        test: /\.(mp3)$/,
-        use:
-        [
+            options:
             {
-                loader: 'file-loader',
-                options:
-                {
-                    outputPath: 'assets/audios/'
-                }
+                outputPath: 'assets/audios/'
             }
-        ]
-    }
+        }
+    ]
+}
     ],
   },
   plugins: [ 
@@ -63,8 +54,15 @@ module.exports = {
           { from: path.resolve(__dirname, '../public') }
       ]
   }),
+  
+  new HtmlWebpackPlugin({
+    template: './src/index.html', 
+     filename: 'index.html',
+     minify:true
+  }),
     // new MiniCSSExtractPlugin({
     //   filename: 'styles/[contenthash].css',
     // })
+    
   ], 
 };

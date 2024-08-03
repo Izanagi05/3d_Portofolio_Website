@@ -163,7 +163,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         this.status.laykulHit = true;
         if (this.status.laykulHit) {
           console.log("Laykul terkunci");
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
         } else {
           console.log("Laykul hit");
@@ -183,7 +183,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         }
         break;
       case "pil2kul":
@@ -200,7 +200,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         }
         break;
       case "pil3kul":
@@ -217,7 +217,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         }
         break;
       case "pil4kul":
@@ -234,7 +234,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         }
         break;
       case "pil5kul":
@@ -251,7 +251,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         }
         break;
       case "pil6kul":
@@ -268,7 +268,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         }
         break;
       case "hitbackkulk":
@@ -289,7 +289,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         } else {
           console.log("Laykul harus dihit terlebih dahulu!");
           this.status.laykulHit = true;
-          this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+          this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
           this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
         }
         break;
@@ -339,7 +339,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         if (this.status.layartv1hit) {
           console.log("layar1 terkunci");
           
-        this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+        this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
           if (this.status.nextlayartv1hit) {
             console.log("trucy");
           } else {
@@ -361,7 +361,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("layar1 hit");
           
           this.status.layartv1hit = true;
-        this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+        this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         }
         break;
       case "interesthit":
@@ -375,7 +375,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("layar1 hit");
           
           this.status.layartv1hit = true;
-        this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+        this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         }
         break;
       case "stackhit":
@@ -388,7 +388,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         } else {
           console.log("layar1 hit");
           this.status.layartv1hit = true;
-        this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+        this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         }
         break;
       case "backtvhit":
@@ -417,7 +417,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Hit LinkedIn hit!");
         }else{
           this.status.layartv1hit = true;
-          this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+          this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         }
         break;
       case "githubhit":
@@ -427,7 +427,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Hit GitHub hit!");
         }else{
           this.status.layartv1hit = true;
-          this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+          this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         }
         break;
       case "gmailhit":
@@ -437,7 +437,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           console.log("Hit Gmail hit!");
         }else{
           this.status.layartv1hit = true;
-          this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+          this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         }
         break;
       case "layararcoren":
@@ -446,7 +446,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           
           this.status.layarcadehit = 1;
           this.methodControl?.changeTexture(this.meshState.layararcade1, "../credit/2.png", 1.1,0.9);
-          this?.methodControl.animateCamera({x: 4.47,y: 4.06, z: 0.76}, {x: -1.46, y: 3.07, z: 0.63}, false)
+          this?.methodControl.animateCamera({x: 5.61,y: 4.45, z: 1.00}, {x: -1.45, y: 3.06, z: 0.95}, false)
         } else {
           this.methodControl?.changeTexture(this.meshState.layararcade1, "../credit/1.png", 1.1,0.9);
           this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
@@ -481,7 +481,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         console.log("Hit project hit!");
         this.methodControl?.playSound("audio/kliksound.mp3", false, 2, 1);
         this.status.laykulHit = true;
-        this?.methodControl.animateCamera({x: -8.61,y: 3.80, z: -0.34}, { x: 0.62, y: 3.32, z: -0.36}, false)
+        this?.methodControl.animateCamera({x: -10.17,y: 3.99, z: -0.75}, { x: 0.65, y: 3.65, z: -0.69}, false)
         this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kppil.png",  1.43,1,0.4,0.9);
         break;
       case "planhome": 
@@ -493,7 +493,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         // -6.53, 10.03, 3.43
         console.log("Hit about me hit!");
         this.methodControl?.playSound("audio/kliksound.mp3", false, 2, 1);
-        this?.methodControl.animateCamera({  x: -6.40,y: 10.09, z: 3.51,}, { x: 30.02, y: 9.79, z: 3.07}, false) 
+        this?.methodControl.animateCamera({ x: -10.03,y: 10.14, z: 3.36}, { x: 30.01, y: 9.24, z: 2.87}, false) 
         this.methodControl?.changeTexture(this.meshState.layarTv1, "../layar1/image1.png",1.43,1,0.4,0.9);
         break;
       case "planarct":
@@ -504,7 +504,7 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
       case "plancredit":
         console.log("Hit credit hit!");
         this.methodControl?.playSound("audio/kliksound.mp3", false, 2, 1);
-        this?.methodControl.animateCamera({x: 4.47,y: 4.06, z: 0.76}, {x: -1.46, y: 3.07, z: 0.63}, false)
+        this?.methodControl.animateCamera({x: 5.61,y: 4.45, z: 1.00}, {x: -1.45, y: 3.06, z: 0.95}, false)
         break;
       default:
         console.log("Unknown hit:", this.objectDataa);

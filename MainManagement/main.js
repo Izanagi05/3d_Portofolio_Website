@@ -1,5 +1,5 @@
 
-import { THREE,scene, camera, renderer, controls , listener, gsap} from '../threeConfig.js'
+import { THREE,scene, camera, renderer, controls , listener, gsap, targetPosition} from '../threeConfig.js'
 import MethodControl  from '../MethodControl/methodControl.js'; 
 import EventBoxHit from '../eventController/eventBoxHit.js'
 import MeshManagement from '../meshManagement/meshManagement.js';
@@ -13,6 +13,7 @@ constructor(){
   this.camera = camera
   this.renderer = renderer
   this.listener = listener
+  this.targetPosition = targetPosition
   this.controls = controls;
   this.meshes = null;
   this.eventBoxHit = new EventBoxHit()
@@ -64,16 +65,20 @@ initComposerBloom(){
 initCamControls(){
 
   this.camera.position.set(-1.70, 14.16, -20.30);
+  // console.log('posisi',this.camera);
+  
   this.controls.enableDamping = true;
   // controls.enablePan = false;
   this.controls.dampingFactor = 0.04;
   this.controls.minDistance = 10;  
   this.controls.maxDistance = 30;
   this.controls.screenSpacePanning = false;
-  // this.cameraInfoElement = document.getElementById('camera-info');
-  // this.cameraInfoElement2 = document.getElementById('camera-info2');
-  // this.cameraInfoElement.textContent = `Camera Position: (x: ${this.camera.position.x.toFixed(2)},y: ${this.camera.position.y.toFixed(2)}, z: ${camera.position.z.toFixed(2)})`;
-  // this.cameraInfoElement2.textContent = `Camera Target: (x: ${this.controls.target.x.toFixed(2)}, y: ${this.controls.target.y.toFixed(2)}, z: ${this.controls.target.z.toFixed(2)})`;
+  // const cameraInfoElement = document.getElementById('camera-info');
+  // const cameraInfoElement2 = document.getElementById('camera-info2');
+  // controls.addEventListener('change', ()=>{
+  // cameraInfoElement.textContent = `Camera Position: (x: ${this.camera.position.x.toFixed(2)},y: ${this.camera.position.y.toFixed(2)}, z: ${camera.position.z.toFixed(2)})`;
+  // cameraInfoElement2.textContent = `Camera Target: (x: ${this.controls.target.x.toFixed(2)}, y: ${this.controls.target.y.toFixed(2)}, z: ${this.controls.target.z.toFixed(2)})`;
+  // });
 
 } 
 loadMeshes(){
@@ -92,9 +97,22 @@ this.meshManagement?.loadMesh(this.scene, this.camera, (loadedMeshes) => {
         // {x: -1.70, y:  14.16, z:  -20.30 }, 
        
         {
-          x: -8.76,  
-          y:6.02,  
-          z:  14.93, 
+          x: -13.72,y: 6.83, z: 20.12,
+          duration: 3,
+          onUpdate: () => { 
+            this.camera.lookAt(0, 4, 0);
+          },
+        onComplete:()=>{
+          this.controls.enableRotate=true
+          this.controls.enablePan=true
+        },
+        
+      })
+    gsap.to(this.controls.target,
+        // {x: -1.70, y:  14.16, z:  -20.30 }, 
+       
+        {
+          x: -0.08, y: 7.80, z: -1.22,
           duration: 3,
           onUpdate: () => { 
             this.camera.lookAt(0, 4, 0);

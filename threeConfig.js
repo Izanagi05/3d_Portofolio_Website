@@ -13,10 +13,11 @@ const controls = new OrbitControls( camera, renderer.domElement);
 const loader = new GLTFLoader();
 const loaderTexture = new THREE.TextureLoader();
 const listener = new THREE.AudioListener();
+const targetPosition = new THREE.Vector3();
 const sound = new THREE.Audio( listener ); 
 const audioLoader = new THREE.AudioLoader();
 const raycaster = new THREE.Raycaster();
 raycaster.params.Points.threshold = 0.001; // Untuk objek type Points
 raycaster.precision = 0.001;
 const mouse = new THREE.Vector2();
-export{THREE, OrbitControls, GLTFLoader,DRACOLoader, gsap, scene ,camera,renderer, controls, loader, loaderTexture,listener, sound, audioLoader, raycaster, mouse, textureLoader}
+export{THREE, OrbitControls, GLTFLoader,DRACOLoader, gsap, scene ,camera,renderer, controls, loader, loaderTexture,listener, sound, audioLoader, raycaster, mouse, textureLoader, targetPosition}

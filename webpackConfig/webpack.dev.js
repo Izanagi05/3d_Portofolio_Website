@@ -2,14 +2,12 @@ const path = require('path');
 const { merge } = require('webpack-merge')
 const defaulConfig =require('./webpack.config.js')
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 module.exports = merge(defaulConfig,{ 
     mode:'development',
     output: {
         path: path.resolve(__dirname, '../dist'),  
         filename: 'mymain.js',  
-        // assetModuleFilename:'asset/[name][ext]',
+        assetModuleFilename:'public/layar1/[name][ext]',
         clean:true
       },
   devServer: {
@@ -18,11 +16,5 @@ module.exports = merge(defaulConfig,{
     liveReload:true
     
   },
-  watch:true,
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html', 
-       filename: 'index.html'
-    }),
-]
+  watch:true, 
 });
