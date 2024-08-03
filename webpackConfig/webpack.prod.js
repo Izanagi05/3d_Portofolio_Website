@@ -15,7 +15,7 @@ module.exports = merge(defaulConfig,{
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html', 
-       filename: '[contenthash].html'
+       filename: 'index.html'
     }),
     
       new CleanWebpackPlugin()
