@@ -4,7 +4,7 @@ import vercel from 'vite-plugin-vercel';
 export default defineConfig({
   build: {
     rollupOptions: {
-      input: './MainManagement/main.js',  
+      input: './src/index.js',  
   },
   optimizeDeps: {
     include: ['gsap', 'three', 'dat.gui'],

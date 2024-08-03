@@ -1,25 +1,28 @@
 {
-   
-  "dependencies": {
-   
-     
-  "gsap": "^3.12.5",
-   
-     
-  "three": "^0.166.1",
-   
-     
-  "vite-plugin-vercel": "^8.0.0"
-   
+  "scripts": {
+    "build": "webpack --config ./webpackConfig/webpack.prod.js",
+    "dev": "webpack  --config ./webpackConfig/webpack.dev.js",
+    "serve": "webpack serve --config ./webpackConfig/webpack.dev.js"
   },
-   
+  "dependencies": {
+    "babel-loader": "^8.2.3",
+    "copy-webpack-plugin": "^9.1.0",
+    "css-loader": "^6.5.0",
+    "file-loader": "^6.2.0",
+    "gsap": "^3.12.5",
+    "html-loader": "^3.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.4.3",
+    "three": "^0.166.1",
+    "vite-plugin-vercel": "^8.0.0",
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0",
+    "webpack-merge": "^5.8.0"
+  },
   "devDependencies": {
-   
-     
-  "dat.gui": "^0.7.9",
-   
-     
-  "vite": "^5.3.3"
-   
+    "clean-webpack-plugin": "^4.0.0",
+    "dat.gui": "^0.7.9",
+    "vite": "^5.3.3"
   }
 }

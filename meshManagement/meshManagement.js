@@ -1,9 +1,8 @@
 // meshLoader.js
 import { GLTFLoader, THREE, DRACOLoader } from "../threeConfig.js";
-import { setupMyGui } from "../guiManagement/guiManagement.js"; 
-
-export function loadMesh(scene, camera, onMeshLoaded) { 
-
+// import { setupMyGui } from "../guiManagement/guiManagement.js"; 
+class MeshManagement{
+loadMesh(scene, camera, onMeshLoaded) { 
 const dracoLoader = new DRACOLoader();
 const loader = new GLTFLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
@@ -16,9 +15,7 @@ dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5
       scene.add(meshes);
       // meshes.forEach(mesh => scene.add(mesh))
       console.log("satet", meshes?.children[0]?.children[0]?.children);
-      meshes?.children[0]?.children[0]?.children[72]?.children[0]?.children[0].position.set(1.15, 1.3,0.53)
-      
-      // setupMyGui(meshes, camera);
+      meshes?.children[0]?.children[0]?.children[72]?.children[0]?.children[0].position.set(1.15, 1.3,0.53) 
       if (onMeshLoaded) {
         onMeshLoaded(meshes); // Memanggil callback dengan parameter cube
       }
@@ -30,3 +27,5 @@ dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5
     }
   );
 }
+}
+export default MeshManagement
