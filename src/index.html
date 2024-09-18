@@ -2,32 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8" />
     <title>Zaa's Food</title>
 
-    <meta name="description" content="3D Portfolio of Zaa's Food: Web developer, web designer, new tech enthusiast, and videography.">
+    <meta
+      name="description"
+      content="3D Portfolio of Zaa's Food: Web developer, web designer, new tech enthusiast, and videography."
+    />
 
-<meta itemprop="name" content="Zaa's Food - 3D Portfolio">
-<meta itemprop="description" content="Web developer, web designer, new tech enthusiast, and videography.">
-<!-- <meta itemprop="image" content="URL_THUMBNAIL_IMAGE"> -->
+    <meta itemprop="name" content="Zaa's Food - 3D Portfolio" />
+    <meta
+      itemprop="description"
+      content="Web developer, web designer, new tech enthusiast, and videography."
+    />
+    <!-- <meta itemprop="image" content="URL_THUMBNAIL_IMAGE"> -->
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Zaa's Food - 3D Portfolio">
-<meta name="twitter:description" content="Web developer, web designer, new tech enthusiast, and videography.">
-<!-- <meta name="twitter:image" content="URL_THUMBNAIL_IMAGE"> -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Zaa's Food - 3D Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Web developer, web designer, new tech enthusiast, and videography."
+    />
+    <!-- <meta name="twitter:image" content="URL_THUMBNAIL_IMAGE"> -->
 
-<meta property="og:site_name" content="Zaa's Food - 3D Portfolio">
-<meta property="og:type" content="Zaa's Food">
-<meta property="og:url" content="https://zaasfood.vercel.app/">
-<meta property="og:title" content="Zaa's Food - 3D Portfolio">
-<meta property="og:description" content="Web developer, web designer, new tech enthusiast, and videography.">
-<!-- <meta property="og:image" content="URL_THUMBNAIL_IMAGE"> -->
+    <meta property="og:site_name" content="Zaa's Food - 3D Portfolio" />
+    <meta property="og:type" content="Zaa's Food" />
+    <meta property="og:url" content="https://zaasfood.vercel.app/" />
+    <meta property="og:title" content="Zaa's Food - 3D Portfolio" />
+    <meta
+      property="og:description"
+      content="Web developer, web designer, new tech enthusiast, and videography."
+    />
+    <!-- <meta property="og:image" content="URL_THUMBNAIL_IMAGE"> -->
 
-    <meta name="apple-mobile-web-app-title" content="Zaa's Food">
-    <meta name="application-name" content="Zaa's Food">
-    <meta name="msapplication-TileColor" content="green">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-title" content="Zaa's Food" />
+    <meta name="application-name" content="Zaa's Food" />
+    <meta name="msapplication-TileColor" content="green" />
+    <meta name="theme-color" content="#ffffff" />
     <style>
+      #loading-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        z-index: 1000;
+      }
+      #progress-bar {
+        width: 0;
+        height: 5px;
+        background-color: green;
+      }
       body {
         margin: 0;
       }
@@ -51,7 +81,12 @@
       } */
     </style>
   </head>
-  <body>  
+  <body>
+    <div id="loading-screen">
+      <!-- <div id="progress-bar"></div> -->
+      <p>Loading...</p>
+    </div>
+
     <!-- <div id="camera-info">Camera Position: (0, 0, 0)</div>
     <div id="camera-info2">Camera lookat:</div> -->
     <!-- <img src="../public/layar1/image1.png" alt="" srcset="../public/layar1/image1.png"> -->

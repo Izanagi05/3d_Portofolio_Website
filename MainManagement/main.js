@@ -72,13 +72,7 @@ initCamControls(){
   this.controls.dampingFactor = 0.04;
   this.controls.minDistance = 10;  
   this.controls.maxDistance = 30;
-  this.controls.screenSpacePanning = false;
-  // const cameraInfoElement = document.getElementById('camera-info');
-  // const cameraInfoElement2 = document.getElementById('camera-info2');
-  // controls.addEventListener('change', ()=>{
-  // cameraInfoElement.textContent = `Camera Position: (x: ${this.camera.position.x.toFixed(2)},y: ${this.camera.position.y.toFixed(2)}, z: ${camera.position.z.toFixed(2)})`;
-  // cameraInfoElement2.textContent = `Camera Target: (x: ${this.controls.target.x.toFixed(2)}, y: ${this.controls.target.y.toFixed(2)}, z: ${this.controls.target.z.toFixed(2)})`;
-  // });
+  this.controls.screenSpacePanning = false; 
 
 } 
 loadMeshes(){

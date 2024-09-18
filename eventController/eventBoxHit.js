@@ -279,7 +279,8 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           if (!this.status.laykulnexthit) {
             this.status.laykulHit = false;
             this.methodControl?.changeTexture(this.meshState.laykul, "../kulkas/kpcov.png",  1.43,1,0.4,0.9);
-            this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
+            // this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
+        this?.methodControl.animateCamera({  x: -13.72,y: 6.83, z: 20.12,}, { x: -0.08, y: 7.80, z: -1.22})
             console.log("laykul false out 2kali");
           } else {
             console.log("laykul masih true out 1kali");
@@ -397,7 +398,8 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
         this.status.layartv1hit = false;
         this.status.nextlayartv1hit = false;
         this.methodControl?.changeTexture(this.meshState.layarTv1, "../layar1/cover.png", 1.43,1,0.4,0.9);
-        this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
+        this?.methodControl.animateCamera({  x: -13.72,y: 6.83, z: 20.12,}, { x: -0.08, y: 7.80, z: -1.22})
+        // this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
         break;
       case "ighit":
         this.methodControl?.playSound("audio/kliksound.mp3", false, 2, 1);
@@ -449,7 +451,9 @@ this.methodControl?.createVideoTexture(this.meshState.layar1Lojong, '../layar1/t
           this?.methodControl.animateCamera({x: 5.61,y: 4.45, z: 1.00}, {x: -1.45, y: 3.06, z: 0.95}, false)
         } else {
           this.methodControl?.changeTexture(this.meshState.layararcade1, "../credit/1.png", 1.1,0.9);
-          this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
+          // this?.methodControl.animateCamera({x: -8.76,y: 6.02, z: 14.93}, {x:0,y:0,z:0})
+          
+        this?.methodControl.animateCamera({  x: -13.72,y: 6.83, z: 20.12,}, { x: -0.08, y: 7.80, z: -1.22})
           this.status.layarcadehit = 0;
         }
         break;
