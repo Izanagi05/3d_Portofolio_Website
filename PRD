@@ -1,0 +1,174 @@
+# Product Requirements Document (PRD)
+## Interactive 3D Portfolio Website ("ZAA Ramen Cyberpunk")
+
+---
+
+### 1. Ringkasan Eksekutif & Visi Produk
+
+**Visi Produk:**  
+Menghadirkan pengalaman portofolio web generasi baru (*next-gen creative developer portfolio*) berbasis 3D WebGL yang imersif, interaktif, dan berkesan tinggi. Alih-alih menggunakan layout website 2D konvensional, portofolio ini menempatkan pengunjung di dalam sebuah diorama 3D bertema *Cyberpunk Japanese Ramen Stand & Retro Tech Room* (terinspirasi dari estetika [jesse-zhou.com](https://www.jesse-zhou.com/)).
+
+**Tujuan Utama:**
+- Menampilkan proyek-proyek rekayasa perangkat lunak, keahlian teknis (*tech stack*), dan profil kreator secara kontekstual di dalam ruang 3D.
+- Memberikan performa yang ringan (*60 FPS*), bebas lag saat perpindahan layar, serta audio responsif tanpa delay.
+- Menjaga keseimbangan antara keindahan visual (*cyberpunk neon bloom*) dan kemudahan navigasi bagi pengunjung/perekrut.
+
+---
+
+### 2. Target Pengguna & Persona
+
+| Persona | Kebutuhan Utama | Ekspektasi Perilaku |
+| :--- | :--- | :--- |
+| **Tech Recruiter / HR** | Menemukan info skill, kontak, dan tautan live demo dengan cepat. | Membutuhkan navigasi yang intuitif, tombol yang jelas, serta tautan eksternal yang langsung berfungsi. |
+| **Engineering Manager / Client** | Menilai kemampuan teknis (Three.js, WebGL, optimasi grafis, arsitektur kode). | Mengamati kehalusan animasi, kestabilan FPS, kebersihan aset, dan arsitektur modular. |
+| **Creative Dev Community** | Mencari inspirasi visual, interaktivitas, dan desain audio. | Menikmati detail estetika, efek pencahayaan neon, dan responsivitas interaksi. |
+
+---
+
+### 3. Arsitektur Sistem & Tech Stack
+
+```mermaid
+graph TD
+    User([Pengguna / Browser]) --> DOM[HTML5 & CSS Overlay HUD]
+    DOM --> Main[src/main.js - Bootstrap]
+    
+    subgraph Core Engine
+        Main --> Scene[src/core/scene.js: Three.js + ACES ToneMapping]
+        Main --> Composer[src/core/postprocessing.js: UnrealBloomPass]
+        Main --> AudioMgr[src/audio/audioManager.js: Web Audio API]
+    end
+
+    subgraph Data & Loaders
+        Main --> ModelLoader[src/loaders/modelLoader.js: DRACO GLB]
+        Main --> TexMgr[src/loaders/textureManager.js: ShaderMaterial Cache]
+        Main --> Config[src/config: constants.js + portfolioData.js]
+    end
+
+    subgraph User Interactions
+        Main --> InterMgr[src/interactions/interactionManager.js]
+        InterMgr --> Raycaster[src/interactions/raycaster.js]
+        InterMgr --> CamAnim[src/animations/cameraAnimation.js: GSAP]
+    end
+```
+
+#### Spesifikasi Teknologi:
+- **Core 3D Engine:** Three.js (`v0.166.x`)
+- **Bundler & Build Tool:** Vite (`v5.3.x`)
+- **Animasi & Lerping:** GSAP (`v3.12.x`)
+- **Model 3D Asset:** GLB dengan kompresi Draco (`final7.glb`, terkompresi ~2.55 MB)
+- **Audio Engine:** Native Web Audio API (`AudioListener`, `AudioBufferSourceNode`)
+- **Post-Processing:** `EffectComposer`, `RenderPass`, `UnrealBloomPass`, `OutputPass`
+
+---
+
+### 4. Spesifikasi Fitur Produk
+
+#### 4.1. Gate Masuk & Preloader Audio
+- **Kebutuhan:** Browser modern memberlakukan kebijakan *Autoplay Policy* yang memblokir audio sebelum ada gestur klik dari pengguna.
+- **Implementasi:**
+  - Menampilkan progress bar persentase (0% - 100%) saat model 3D, semua tekstur, dan audio di-preload secara asinkron.
+  - Setelah selesai, muncul tombol **"MASUK"** dengan efek *neon pulse*.
+  - Gestur klik tombol ini membuka konteks Web Audio (`AudioContext.resume()`), menyembunyikan preloader, memutar *SFX start*, dan memulai loop ambient.
+
+#### 4.2. Stasiun Interaktif (Interactive Stations)
+
+##### A. Stasiun Kulkas ("Kulkas Project Showcase")
+- **Titik Kamera:** Fokus jarak dekat ke layar kulkas (`x: -8.61, y: 3.80, z: -0.34`).
+- **Fitur:**
+  - **Menu Proyek (`pil1kul` – `pil6kul`):** Menampilkan poster proyek web live (misal: *RPLU18, TicTacToe, Spline Web, Batu Gunting Kertas*, dsb.).
+  - **Tombol Kunjungi (`nextresultbox`):** Membuka tautan live demo proyek di tab baru (`_blank`).
+  - **Tombol Kembali (`hitbackkulk`):** Kembali ke menu pilihan kulkas jika sedang membuka detail proyek, atau kembali ke ruangan utama (*Home View*).
+
+##### B. Stasiun TV Monitor ("About & Skills")
+- **Titik Kamera:** Fokus ke monitor TV utama (`x: -6.40, y: 10.09, z: 3.51`).
+- **Fitur:**
+  - **Tab About Me (`abouthit`):** Menampilkan slide biografi dan latar belakang.
+  - **Tab Interest (`interesthit`):** Menampilkan bidang minat dan fokus teknologi.
+  - **Tab Tech Stack (`stackhit`):** Menampilkan ikon dan daftar teknologi yang dikuasai.
+  - **Tautan Sosial (`ighit`, `linkedinhit`, `githubhit`, `gmailhit`):** Membuka profil eksternal pengembang.
+  - **Tombol Kembali (`backtvhit`):** Mengembalikan kamera ke posisi *Home*.
+
+##### C. Stasiun Mesin Arcade ("Credits & Fun")
+- **Titik Kamera:** Sudut pandang mesin arcade (`x: 4.47, y: 4.06, z: 0.76`).
+- **Fitur:**
+  - Menampilkan layar kredit pembuat dan apresiasi aset.
+  - Menggunakan sound effect retro 8-bit saat diaktifkan.
+
+##### D. Tombol Navigasi Lantai (Floor Hitboxes)
+- Menara/lantai memiliki hitbox teks (`planhome`, `plan1`, `plan3`, `plancredit`, `planarct`) yang berfungsi sebagai *shortcut* cepat untuk menerbangkan kamera ke stasiun terkait tanpa harus membidik layar kecil.
+
+#### 4.3. Sistem Interaksi & Visual Feedback
+- **Dynamic Pointer Cursor:** Kursor mouse otomatis berubah menjadi `pointer` saat berada di atas objek interaktif dan kembali ke `default` di area kosong.
+- **Hover Highlight (Glow Futuristik):** Hitbox transparan memunculkan pendaran halus *cyan neon* (`opacity: 0.35`) saat di-hover. Model 3D tetap bersih saat kursor tidak berada di atas tombol.
+- **Click Flash Feedback:** Kilatan responsif instan (80ms) saat objek diklik sebagai feedback visual sebelum animasi kamera berjalan.
+- **Drag vs Click Guard:** Jika pengguna menggeser mouse lebih dari 6px untuk memutar kamera, aksi tersebut tidak dianggap sebagai klik tombol.
+- **Keyboard Shortcut:** Menekan tombol **`Escape`** akan mengembalikan kamera ke tampilan awal (*Home View*).
+
+#### 4.4. Audio Engine & Sound FX
+- **Zero-Delay Trigger:** Semua file audio di-*decode* ke dalam RAM (*memory buffer*) sejak tahap loading, menghilangkan jeda unduh saat tombol diklik.
+- **Daftar Aset Audio:**
+  - `startsound.mp3`: Suara intro saat masuk ke ruangan.
+  - `walk.mp3`: Suara langkah kaki ambient berulang (volume terkalibrasi di 0.45).
+  - `kliksound.mp3`: Suara klik mekanikal saat menekan tombol antarmuka.
+  - `creditsound.mp3`: Suara retro arcade saat membuka stasiun arcade.
+- **Audio Toggle (Mute/Unmute):** Tombol equalizer dinamis di pojok layar HUD untuk mematikan atau menyalakan seluruh suara dengan transisi volume halus.
+
+---
+
+### 5. Estetika Visual & Pengaturan Warna (Cyberpunk Night)
+
+Sesuai referensi *Jesse Zhou*, tampilan dikalibrasi ke suasana malam warung ramen cyberpunk:
+- **Warna Latar Belakang & Kabut:** Indigo gelap (`#120a26`) yang menyatukan batas canvas dengan viewport.
+- **Pencahayaan Tambahan:** `HemisphereLight` dengan perpaduan langit ungu-indigo (`#7b6cff`) dan pantulan lantai magenta-pink (`#ff6fb5`).
+- **Tone Mapping:** `ACESFilmicToneMapping` dengan exposure terkalibrasi (`1.05`) untuk mencegah *blown-out highlights*.
+- **Post-Processing Bloom:** 
+  - `UnrealBloomPass` dengan threshold tinggi (`0.72`) sehingga hanya elemen lampu, teks neon, dan efek emissive yang berpendar.
+  - Resolusi bloom dihitung pada 50% resolusi viewport untuk menghemat alokasi kartu grafis (GPU).
+
+---
+
+### 6. Kebutuhan Non-Fungsional (NFRs) & Optimasi Performa
+
+| Aspek | Target Spesifikasi | Strategi Implementasi |
+| :--- | :--- | :--- |
+| **Ukuran Bundle 3D** | < 3 MB | Konversi file GLTF mentah (8.8 MB) menjadi format biner Draco GLB (2.55 MB). |
+| **Frame Rate** | Stabil 60 FPS pada laptop mid-range | - Pembatasan pixel ratio maksimal 1.5.<br>- Shader material dibuat satu kali (*zero re-compilation*).<br>- Objek statis di-*freeze* (`matrixAutoUpdate = false`).<br>- Raycasting hover dibatasi maksimal 1x per frame. |
+| **Waktu Respon Interaksi** | < 16 ms (1 frame) | Preloading seluruh gambar tekstur ke GPU RAM saat booting. |
+| **Browser Compatibility** | Chrome, Edge, Firefox, Safari (Modern WebGL2) | Penggunaan standard Three.js ES Modules & fallback touch controls. |
+
+---
+
+### 7. Matriks Keberhasilan Produk (Success Metrics)
+
+1. **User Engagement:** Durasi kunjungan rata-rata (*Average Time on Site*) > 2 menit.
+2. **Interaction Depth:** Pengunjung mengklik minimal 2 stasiun proyek (Kulkas/TV) per sesi.
+3. **Performance Stability:** Nilai *Cumulative Layout Shift (CLS)* = 0, FPS rata-rata di atas 50 FPS pada 90% perangkat.
+4. **Loading Friction:** Waktu unduh awal di bawah 3.5 detik pada koneksi internet standar (20 Mbps).
+
+---
+
+### 8. Rencana Pengembangan Lanjutan (Roadmap)
+
+```mermaid
+flowchart LR
+    Phase1[Fase 1: Fondasi & Performa] --> Phase2[Fase 2: Interaktivitas Lanjutan]
+    Phase2 --> Phase3[Fase 3: Personalisasi & Analitik]
+
+    subgraph Phase1
+        A1[DRACO GLB 2.55MB]
+        A2[Zero-Delay Web Audio]
+        A3[Cyberpunk Color Grading]
+    end
+
+    subgraph Phase2
+        B1[Mobile Virtual Joystick]
+        B2[Mini-game di Mesin Arcade]
+        B3[Sound Effect Langkah Kaki Dinamis]
+    end
+
+    subgraph Phase3
+        C1[Event Tracking Google Analytics / PostHog]
+        C2[Pilihan Tema Warna: Day / Cyberpunk Night]
+        C3[Pemberian Feedback Form / Contact Modal Langsung di TV]
+    end
+```

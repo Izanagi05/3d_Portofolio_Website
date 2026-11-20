@@ -1,9 +1,5 @@
-/node_modules
-/eventController
-/guiManagement
-/MainManagement
-/meshManagement
-/MethodControl
-/public
-/src
-/webpackConfig
+node_modules/
+dist/
+_legacy_code/
+.DS_Store
+*.log

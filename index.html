@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050508" />
+    <title>Izanagi — 3D Portfolio</title>
+    <link rel="preload" href="/final7.glb" as="fetch" crossorigin />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <div id="loader">
+      <div class="loader-card">
+        <h1>ZAA <span>RAMEN</span></h1>
+        <p class="subtitle">interactive portfolio</p>
+        <div class="loader-track"><div id="loader-bar"></div></div>
+        <p id="loader-text">0%</p>
+        <button id="enter-btn" hidden>Masuk</button>
+      </div>
+    </div>
+
+    <div id="hud" hidden>
+      <button id="sound-btn" aria-label="Matikan suara">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <p class="hint">Drag untuk memutar · Scroll untuk zoom · Esc untuk kembali</p>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

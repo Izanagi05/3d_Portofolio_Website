@@ -1,17 +1,13 @@
 import { defineConfig } from 'vite';
-import vercel from 'vite-plugin-vercel';
- 
+
 export default defineConfig({
+  root: './',
+  publicDir: 'public',
   build: {
-    rollupOptions: {
-      input: './src/index.js',  
+    outDir: 'dist',
+    assetsDir: 'assets',
   },
   optimizeDeps: {
     include: ['gsap', 'three', 'dat.gui'],
   },
-},
-  server: {
-    port: 5173,
-  },
-  plugins: [vercel()],
 });
