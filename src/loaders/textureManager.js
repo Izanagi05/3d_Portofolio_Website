@@ -7,7 +7,7 @@ const cache = new Map(); // path → Promise<Texture>
 export function initTextureLoader(manager, renderer) {
   textureLoader = new THREE.TextureLoader(manager);
   if (renderer) {
-    maxAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    maxAnisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
   }
 }
 

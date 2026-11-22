@@ -2,75 +2,56 @@
 export const MODEL_PATH = 'final7.glb';
 export const DRACO_DECODER_PATH = 'https://www.gstatic.com/draco/versioned/decoders/1.5.7/';
 
-// ─── Tema & Renderer (mirip jesse-zhou.com: hitam pekat + pool baked) ─────
+// ─── Tema & Renderer (1-pass selective bloom, super enteng di GPU) ────────
 export const CAMERA_FOV = 75;
 
 export const RENDER_CONFIG = {
-  maxPixelRatio: 1.5,
+  maxPixelRatio: 1.15, // hemat hingga 40%+ pixel dibanding 1.5x namun tetap tajam
 };
 
 export const THEME = {
   background: 0x000000,
   fog: { color: 0x000000, near: 30, far: 76 },
-  streetLampColor: 0xd955ff,
 };
 
-// Rays / bloom dibuat lebih halus & selektif (hanya objek neon + hologram)
+// Selective bloom 1-pass lembut (strength 0.36, threshold 0.28):
+// dinding & lantai gelap (< 0.28) tetap bersih, sedangkan plank, teks putih,
+// neon, dan hologram berpendar halus mirip versi legacy tanpa silau.
 export const BLOOM_CONFIG = {
-  strength: 0.32,
-  radius: 0.45,
-  threshold: 0.22,
+  strength: 0.36,
+  radius: 0.55,
+  threshold: 0.28,
   resolutionScale: 0.5,
 };
 
-export const BLOOM_MATERIAL_NAMES = new Set([
-  'bola gede',
-  'cyan nyala',
-  'sumpit ungu',
-  'mie',
-  'outlinezaafood.001',
-  'lampu biru',
-  'lampu merah',
-  'lampu ijo',
-  'lampion',
-  'oren tv',
-  'orenes',
-  'biru nyala',
-  'merah nyala',
-  'ijo tombol',
-  'pacman',
-  'lampu kotak',
-  'cyan',
-  'plan pink',
-  'pink tiangpers ',
-  'unguing tiang`',
+// Matikan spotlight/pointlight GLB lain yg berat & silau,
+// KECUALI Point.001 & Point.002 (lampu jalan) yang dipertahankan persis setelan awal (intensity 100)
+export const DISABLED_GLB_LIGHTS = new Set([
+  'Light',
+  'Point.003',
+  'Point.004',
+  'Point.005',
+  'Point.006',
+  'lampu arcade.001',
+  'lampu arcade.002',
+  'lampu arcade.003',
+  'lampu arcade.005',
+  'Area.001',
+  'Area.002',
+  'Area.003',
+  'Area.004',
+  'nyala kotak',
 ]);
 
-// ─── Penyesuaian cahaya bawaan GLB (matikan/kecilkan spotlight yang silau) ─
-export const GLB_LIGHT_OVERRIDES = {
-  Light: { intensity: 180, color: 0xdce6ff },
-  'Point.001': { intensity: 0 }, // matikan glare tiang lampu
-  'Point.002': { intensity: 0 }, // matikan glare tiang lampu
-  'Point.003': { intensity: 14, color: 0x9b5cff },
-  'Point.004': { intensity: 16, color: 0xff9b54 },
-  'Point.005': { intensity: 16, color: 0x22e0ff },
-  'Point.006': { intensity: 8, color: 0xff9b54 },
-  'lampu arcade.001': { intensity: 15, color: 0x38d9ff },
-  'lampu arcade.002': { intensity: 8, color: 0xff6e3a },
-  'lampu arcade.003': { intensity: 12, color: 0x6b7cff },
-  'lampu arcade.005': { intensity: 0 },
-  'Area.001': { intensity: 0 }, // digantikan 1 counterWarm light agar shader jauh lebih ringan
-  'Area.002': { intensity: 0 },
-  'Area.003': { intensity: 0 },
-  'Area.004': { intensity: 0 },
-  'nyala kotak': { intensity: 6 },
-};
-
+// Lampu ringan: atmosfer umum + lampu kotak, pc, kulkas (lampu jalan pakai Point.001 & Point.002 asli)
 export const EXTRA_LIGHTS = {
-  hemi: { sky: 0x6c7bff, ground: 0x161228, intensity: 0.65 },
-  rearKey: { color: 0xc2d0ff, intensity: 0.55, pos: [-8, 14, -14] },
-  frontFill: { color: 0xb8c8ff, intensity: 0.32, pos: [-10, 12, 16] },
-  counterWarm: { color: 0xffb469, intensity: 18, distance: 10, pos: [-2.0, 3.6, 1.2] },
+  hemi: { sky: 0x7684ff, ground: 0x161228, intensity: 0.85 },
+  rearKey: { color: 0xd0dcff, intensity: 0.7, pos: [-8, 14, -14] },
+  frontFill: { color: 0xc2d0ff, intensity: 0.42, pos: [-10, 12, 16] },
+  counterWarm: { color: 0xffb469, intensity: 16, distance: 10, pos: [-2.0, 3.6, 1.2] },
+  lampuKotak: { color: 0xffe4bc, intensity: 4.5, distance: 6.0, pos: [1.45, 3.9, 5.45] },
+  pcLight: { color: 0x9ed8ff, intensity: 11, distance: 7.5, pos: [-5.3, 10.1, 3.2] },
+  kulkasLight: { color: 0x8be8ff, intensity: 12, distance: 8.0, pos: [-7.9, 3.8, -0.7] },
 };
 
 // ─── Kontrol kamera ──────────────────────────────────────────────────────

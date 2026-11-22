@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import {
-  THEME,
-  GLB_LIGHT_OVERRIDES,
+  DISABLED_GLB_LIGHTS,
   EXTRA_LIGHTS,
 } from '../config/constants.js';
 
@@ -9,12 +8,11 @@ const FLOOR_CENTER = { x: 0.61, z: -2.09 };
 const FLOOR_SPAN = 76;
 
 /**
- * Buat tekstur lantai ala baked lighting Jesse Zhou: dasar slate gelap yang memudar
- * ke hitam, dengan kolam cahaya lembut magenta di sisi tiang lampu & cyan di sisi kulkas/kanan,
- * tanpa menimbulkan silau/glare pada tiang lampu itu sendiri.
+ * Tekstur lantai baked 256x256: kolam magenta di sisi tiang lampu & cyan di sisi
+ * kulkas/kanan, memudar halus ke hitam tanpa beban cahaya real-time.
  */
 function createBakedFloorTexture() {
-  const size = 512;
+  const size = 256;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
@@ -37,7 +35,6 @@ function createBakedFloorTexture() {
     ctx.fillRect(p.x - r, p.y - r, r * 2, r * 2);
   };
 
-  // Base piringan lantai gelap lembut (memudar halus ke hitam di luar)
   drawGlow(FLOOR_CENTER.x, FLOOR_CENTER.z, 34, [
     [0, '#1b1d2b'],
     [0.55, '#12131d'],
@@ -46,64 +43,32 @@ function createBakedFloorTexture() {
 
   ctx.globalCompositeOperation = 'lighter';
 
-  // Kolam ungu-magenta di bawah tiang lampu (-8.4, 8.6) tanpa menyilaukan tiang
   drawGlow(-8.4, 8.6, 12.5, [
     [0, 'rgba(205, 45, 245, 0.36)'],
     [0.45, 'rgba(135, 25, 195, 0.16)'],
     [1, 'rgba(0,0,0,0)'],
   ]);
 
-  // Kolam cyan di sisi kulkas (-7.2, -1.4)
   drawGlow(-7.2, -1.4, 10.5, [
     [0, 'rgba(14, 215, 245, 0.28)'],
     [0.5, 'rgba(10, 145, 195, 0.11)'],
     [1, 'rgba(0,0,0,0)'],
   ]);
 
-  // Kolam cyan di sisi depan-kanan arcade (4.2, 4.4)
   drawGlow(4.2, 4.4, 10, [
     [0, 'rgba(16, 210, 235, 0.24)'],
     [0.5, 'rgba(10, 130, 175, 0.09)'],
     [1, 'rgba(0,0,0,0)'],
   ]);
 
-  // Bias hangat halus di depan meja ramen (-2.0, 4.2)
   drawGlow(-2.0, 4.2, 5.2, [
     [0, 'rgba(255, 165, 70, 0.16)'],
     [1, 'rgba(0,0,0,0)'],
   ]);
 
   const tex = new THREE.CanvasTexture(canvas);
-  tex.minFilter = THREE.LinearMipmapLinearFilter;
-  tex.generateMipmaps = true;
-  return tex;
-}
-
-/**
- * Tekstur micro-grain 128x128 (dibuat sekali, ~0 beban VRAM) agar material warna
- * polos tampak bertekstur & matte seperti hasil bake Blender, bukan plastik licin.
- */
-function createMicroGrainTexture() {
-  const size = 128;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-  const img = ctx.createImageData(size, size);
-
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = 118 + Math.floor(Math.random() * 20);
-    img.data[i] = v;
-    img.data[i + 1] = v;
-    img.data[i + 2] = v;
-    img.data[i + 3] = 255;
-  }
-  ctx.putImageData(img, 0, 0);
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.wrapS = THREE.RepeatWrapping;
-  tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(8, 8);
+  tex.minFilter = THREE.LinearFilter;
+  tex.generateMipmaps = false;
   return tex;
 }
 
@@ -123,58 +88,40 @@ const MATTE_MATERIAL_NAMES = new Set([
 
 const METAL_MATERIAL_NAMES = new Set(['Besi', 'pipa', 'bolongan radio']);
 
-const LAMP_SIGN_DIM = new Set([
-  'plan pink',
-  'pink tiangpers ',
-  'unguing tiang`',
-  'cyan',
-  'putih nyala',
-]);
-
 /**
- * Terapkan sistem pencahayaan & material ala jesse-zhou.com yang enteng di GPU:
- * - Matikan spotlight/pointlight GLB yang bikin silau & berat
- * - Terapkan baked floor texture (kolam magenta/cyan tanpa glare di tiang)
- * - Tambahkan micro-grain matte & anisotropic filtering agar tekstur tajam
+ * Optimasi pencahayaan & material:
+ * - Matikan lampu GLB berlebih kecuali Point.001 & Point.002 (lampu jalan asli)
+ * - Pertahankan plank, teks putih, & material emissive sesuai warna/intensitas legacy
+ * - Pasang baked floor gradient pada Plane (alas) & kalibrasi matte dinding/kayu
  */
 export function applySceneLighting(scene, modelRoot, renderer) {
-  const maxAniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const maxAniso = Math.min(4, renderer.capabilities.getMaxAnisotropy());
 
-  // 1. Rapikan & matikan cahaya GLB yang berlebihan agar GPU ringan & tidak silau
+  // 1. Matikan lampu bawaan GLB yang berat & silau, tapi pertahankan Point.001 & Point.002 (lampu jalan) persis nilai awal
   modelRoot.traverse((obj) => {
     if (!obj.isLight) return;
     const key = obj.parent?.name || obj.name;
-    const override = GLB_LIGHT_OVERRIDES[key] || GLB_LIGHT_OVERRIDES[obj.name];
-    if (override) {
-      if (override.intensity !== undefined) {
-        obj.intensity = override.intensity;
-        if (override.intensity === 0) obj.visible = false;
-      }
-      if (override.color !== undefined) obj.color.setHex(override.color);
-    } else {
-      obj.intensity *= 0.45;
+    if (DISABLED_GLB_LIGHTS.has(key) || DISABLED_GLB_LIGHTS.has(obj.name)) {
+      obj.intensity = 0;
+      obj.visible = false;
     }
   });
 
-  // 2. Pasang baked floor gradient pada Plane (alas) menggunakan koordinat world XZ
+  // 2. Baked floor gradient pada Plane (alas)
   const floor = modelRoot.getObjectByName('Plane');
   const floorBakeTex = createBakedFloorTexture();
-  floorBakeTex.anisotropy = maxAniso;
 
   if (floor?.material) {
     floor.material.color.setHex(0xffffff);
-    floor.material.roughness = 0.72;
-    floor.material.metalness = 0.08;
+    floor.material.roughness = 0.78;
+    floor.material.metalness = 0.05;
     floor.material.onBeforeCompile = (shader) => {
       shader.uniforms.uFloorBakeMap = { value: floorBakeTex };
       shader.uniforms.uFloorCenter = { value: new THREE.Vector2(FLOOR_CENTER.x, FLOOR_CENTER.z) };
       shader.uniforms.uFloorSpan = { value: FLOOR_SPAN };
 
       shader.vertexShader = shader.vertexShader
-        .replace(
-          '#include <common>',
-          `#include <common>\nvarying vec3 vFloorWorldPos;`
-        )
+        .replace('#include <common>', `#include <common>\nvarying vec3 vFloorWorldPos;`)
         .replace(
           '#include <worldpos_vertex>',
           `#include <worldpos_vertex>\nvFloorWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`
@@ -199,14 +146,13 @@ export function applySceneLighting(scene, modelRoot, renderer) {
         .replace(
           '#include <emissivemap_fragment>',
           `#include <emissivemap_fragment>
-          totalEmissiveRadiance += floorCol * 0.72;`
+          totalEmissiveRadiance += floorCol * 0.65;`
         );
     };
     floor.material.needsUpdate = true;
   }
 
-  // 3. Poles material model: matte grain + redam neon tiang lampu + anisotropy tekstur
-  const grainTex = createMicroGrainTexture();
+  // 3. Kalibrasi material: matte bersih (tanpa bumpMap berat) & threshold bloom tepat
   const seenMats = new Set();
 
   modelRoot.traverse((obj) => {
@@ -220,32 +166,43 @@ export function applySceneLighting(scene, modelRoot, renderer) {
       mat.map.needsUpdate = true;
     }
 
-    if (mat.name === 'bola gede') {
-      mat.emissive.setHex(THEME.streetLampColor);
-      mat.emissiveIntensity = 0.85;
-    } else if (LAMP_SIGN_DIM.has(mat.name)) {
-      mat.emissiveIntensity = 0.65;
-      if (mat.name === 'putih nyala') mat.emissive.setHex(0xe8dcff);
+    if (mat.name === 'lampu kotak') {
+      mat.emissive.setHex(0xffe8c8);
+      mat.emissiveIntensity = 0.78; // lampu kotak dibuat lembut, tidak terlalu terang
     } else if (MATTE_MATERIAL_NAMES.has(mat.name)) {
-      mat.roughness = Math.max(mat.roughness ?? 0.5, 0.82);
+      mat.roughness = 0.86;
       mat.metalness = 0.02;
-      mat.bumpMap = grainTex;
-      mat.bumpScale = 0.006;
       mat.needsUpdate = true;
     } else if (METAL_MATERIAL_NAMES.has(mat.name)) {
-      mat.roughness = 0.58;
-      mat.metalness = 0.25;
-      mat.bumpMap = grainTex;
-      mat.bumpScale = 0.004;
+      mat.roughness = 0.62;
+      mat.metalness = 0.2;
       mat.needsUpdate = true;
     }
   });
 
-  // 4. Hanya 4 sumber cahaya ringan (hemat fragment shader, zero glare pada tiang)
+  // Terangkan strip putih pada lampu kotak (lampubalok) tanpa memengaruhi tiang
+  const boxLamp = modelRoot.getObjectByName('lampubalok');
+  boxLamp?.traverse((obj) => {
+    if (obj.isMesh && obj.material?.name === 'putih nyala') {
+      obj.material = obj.material.clone();
+      obj.material.emissive.setHex(0xfff2dc);
+      obj.material.emissiveIntensity = 0.72;
+    }
+  });
+
+  // 4. Lampu ringan: atmosfer umum + lampu kotak, pc, kulkas (lampu jalan pakai Point.001 & Point.002 asli)
   const group = new THREE.Group();
   group.name = 'sceneAtmosphereLights';
 
-  const { hemi, rearKey, frontFill, counterWarm } = EXTRA_LIGHTS;
+  const {
+    hemi,
+    rearKey,
+    frontFill,
+    counterWarm,
+    lampuKotak,
+    pcLight,
+    kulkasLight,
+  } = EXTRA_LIGHTS;
   group.add(new THREE.HemisphereLight(hemi.sky, hemi.ground, hemi.intensity));
 
   const rearDir = new THREE.DirectionalLight(rearKey.color, rearKey.intensity);
@@ -256,14 +213,16 @@ export function applySceneLighting(scene, modelRoot, renderer) {
   frontDir.position.set(...frontFill.pos);
   group.add(frontDir);
 
-  const counterLight = new THREE.PointLight(
-    counterWarm.color,
-    counterWarm.intensity,
-    counterWarm.distance,
-    2
-  );
-  counterLight.position.set(...counterWarm.pos);
-  group.add(counterLight);
+  const addPoint = ({ color, intensity, distance, pos }) => {
+    const light = new THREE.PointLight(color, intensity, distance, 2);
+    light.position.set(...pos);
+    group.add(light);
+  };
+
+  addPoint(counterWarm);
+  addPoint(lampuKotak);
+  addPoint(pcLight);
+  addPoint(kulkasLight);
 
   scene.add(group);
   return group;

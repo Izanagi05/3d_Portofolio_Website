@@ -3,8 +3,8 @@ import * as THREE from 'three';
 const TWO_PI = Math.PI * 2;
 
 /**
- * Bangun cloud partikel mangkuk ramen 3D (mangkuk, kuah, mie terangkat,
- * sumpit, topping, dan uap) dalam satu BufferGeometry agar cuma 1 draw call.
+ * Bangun cloud partikel mangkuk ramen 3D (~3.100 titik dalam 1 BufferGeometry)
+ * yang ringan di GPU tapi tetap padat dan terbaca jelas.
  */
 function buildRamenBowlGeometry() {
   const positions = [];
@@ -19,19 +19,19 @@ function buildRamenBowlGeometry() {
     phases.push(phase);
   };
 
-  // 1. Mangkuk Ramen (siluet lengkung donburi + ring kaki + bibir mangkuk tebal)
-  const bowlRings = 24;
+  // 1. Mangkuk Ramen
+  const bowlRings = 18;
   for (let i = 0; i <= bowlRings; i++) {
-    const t = i / bowlRings; // 0 = dasar, 1 = bibir atas
+    const t = i / bowlRings;
     const y = -0.44 + t * 0.7;
     const r = 0.34 + 0.62 * Math.pow(t, 0.56);
     const isRim = i === bowlRings || i === bowlRings - 1;
-    const count = isRim ? 140 : Math.floor(42 + t * 65);
-    const ptSize = isRim ? 1.55 : 1.05;
+    const count = isRim ? 100 : Math.floor(28 + t * 44);
+    const ptSize = isRim ? 1.5 : 1.05;
 
     for (let j = 0; j < count; j++) {
       const a = (j / count) * TWO_PI + (i % 2) * 0.05;
-      const jitter = isRim ? 0.008 : 0.015;
+      const jitter = isRim ? 0.008 : 0.014;
       push(
         Math.cos(a) * r + (Math.random() - 0.5) * jitter,
         y + (Math.random() - 0.5) * jitter,
@@ -42,41 +42,40 @@ function buildRamenBowlGeometry() {
     }
   }
 
-  // Ring kaki mangkuk di paling bawah
-  for (let rStep = 0; rStep < 4; rStep++) {
-    const y = -0.5 + rStep * 0.02;
-    for (let j = 0; j < 44; j++) {
-      const a = (j / 44) * TWO_PI;
-      push(Math.cos(a) * 0.33, y, Math.sin(a) * 0.33, 1.15, 0);
+  // Ring kaki mangkuk
+  for (let rStep = 0; rStep < 3; rStep++) {
+    const y = -0.5 + rStep * 0.025;
+    for (let j = 0; j < 32; j++) {
+      const a = (j / 32) * TWO_PI;
+      push(Math.cos(a) * 0.33, y, Math.sin(a) * 0.33, 1.1, 0);
     }
   }
 
-  // Garis rusuk vertikal halus pada dinding mangkuk agar struktur terbaca
-  for (let rib = 0; rib < 16; rib++) {
-    const a = (rib / 16) * TWO_PI;
-    for (let k = 0; k <= 16; k++) {
-      const t = k / 16;
+  // Garis rusuk vertikal mangkuk
+  for (let rib = 0; rib < 12; rib++) {
+    const a = (rib / 12) * TWO_PI;
+    for (let k = 0; k <= 12; k++) {
+      const t = k / 12;
       const y = -0.44 + t * 0.7;
       const r = 0.34 + 0.62 * Math.pow(t, 0.56);
       push(Math.cos(a) * r, y, Math.sin(a) * r, 0.95, 0);
     }
   }
 
-  // 2. Permukaan kuah & pusaran di dalam mangkuk
-  for (let i = 0; i < 420; i++) {
+  // 2. Permukaan kuah
+  for (let i = 0; i < 220; i++) {
     const t = Math.sqrt(Math.random());
     const r = t * 0.84;
     const a = Math.random() * TWO_PI;
-    const ripple = Math.sin(r * 18) * 0.012;
-    push(Math.cos(a) * r, 0.1 + ripple, Math.sin(a) * r, 0.85, 1);
+    push(Math.cos(a) * r, 0.1 + Math.sin(r * 18) * 0.012, Math.sin(a) * r, 0.85, 1);
   }
 
-  // 3. Gulungan mie bergelombang di dalam mangkuk
-  const coilStrands = 12;
+  // 3. Gulungan mie di dalam mangkuk
+  const coilStrands = 9;
   for (let s = 0; s < coilStrands; s++) {
     const baseAngle = (s / coilStrands) * TWO_PI;
-    for (let k = 0; k < 55; k++) {
-      const u = k / 54;
+    for (let k = 0; k < 38; k++) {
+      const u = k / 37;
       const a = baseAngle + u * 2.4;
       const r = 0.12 + u * 0.56 + Math.sin(u * 16) * 0.04;
       const y = 0.11 + Math.sin(u * 12 + s) * 0.035;
@@ -84,62 +83,52 @@ function buildRamenBowlGeometry() {
     }
   }
 
-  // 4. Mie yang terangkat ke atas (menuju sumpit, ciri khas hologram ramen)
-  const liftedStrands = 11;
+  // 4. Mie yang terangkat ke sumpit
+  const liftedStrands = 8;
   for (let s = 0; s < liftedStrands; s++) {
     const spreadX = ((s / (liftedStrands - 1)) - 0.5) * 0.22;
     const spreadZ = Math.sin(s * 1.7) * 0.09;
-    for (let k = 0; k < 44; k++) {
-      const t = k / 43; // 0 = di mangkuk, 1 = puncak sumpit
+    for (let k = 0; k < 32; k++) {
+      const t = k / 31;
       const y = 0.14 + t * 0.68;
       const waveX = Math.sin(t * Math.PI * 5 + s * 0.8) * 0.045;
       const waveZ = Math.cos(t * Math.PI * 4.5 + s * 1.1) * 0.04;
-      const pinch = 1 - t * 0.65; // menyempit saat dijepit sumpit
-      push(
-        0.04 + spreadX * pinch + waveX,
-        y,
-        0.02 + spreadZ * pinch + waveZ,
-        1.25,
-        1
-      );
+      const pinch = 1 - t * 0.65;
+      push(0.04 + spreadX * pinch + waveX, y, 0.02 + spreadZ * pinch + waveZ, 1.25, 1);
     }
   }
 
-  // 5. Topping: irisan telur (tamago), narutomaki, & daging chashu
-  // Setengah telur rebus
-  for (let i = 0; i < 110; i++) {
+  // 5. Topping: telur, narutomaki, & chashu
+  for (let i = 0; i < 65; i++) {
     const a = Math.random() * TWO_PI;
     const rad = Math.sqrt(Math.random());
     push(-0.36 + Math.cos(a) * rad * 0.18, 0.15 + (1 - rad) * 0.04, 0.28 + Math.sin(a) * rad * 0.13, 1.1, 1);
   }
-  // Narutomaki bergelombang
-  for (let i = 0; i < 90; i++) {
-    const t = i / 90;
+  for (let i = 0; i < 60; i++) {
+    const t = i / 60;
     const a = t * TWO_PI * 2.5;
     const r = t * 0.14;
     push(0.38 + Math.cos(a) * r, 0.16, 0.22 + Math.sin(a) * r, 1.15, 1);
   }
-  // Chashu slice
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 70; i++) {
     const a = Math.random() * TWO_PI;
     const rad = Math.sqrt(Math.random()) * 0.22;
     push(0.05 + Math.cos(a) * rad, 0.14, -0.4 + Math.sin(a) * rad, 1.05, 1);
   }
 
-  // 6. Sepasang sumpit diagonal panjang (menjepit mie yang terangkat)
+  // 6. Sepasang sumpit diagonal
   const chopsticks = [
     { start: new THREE.Vector3(-0.08, 0.72, -0.05), end: new THREE.Vector3(1.12, 1.38, 0.34) },
     { start: new THREE.Vector3(-0.06, 0.64, 0.08), end: new THREE.Vector3(1.16, 1.23, 0.48) },
   ];
   chopsticks.forEach(({ start, end }) => {
-    const steps = 115;
+    const steps = 85;
     for (let k = 0; k <= steps; k++) {
       const t = k / steps;
       const p = new THREE.Vector3().lerpVectors(start, end, t);
       const radius = 0.012 + t * 0.012;
-      // 3 titik per langkah biar garis sumpit padat & menyala jelas
-      for (let c = 0; c < 3; c++) {
-        const ang = (c / 3) * TWO_PI + k * 0.4;
+      for (let c = 0; c < 2; c++) {
+        const ang = c * Math.PI + k * 0.4;
         push(
           p.x + Math.cos(ang) * radius,
           p.y + Math.sin(ang) * radius * 0.5,
@@ -151,12 +140,12 @@ function buildRamenBowlGeometry() {
     }
   });
 
-  // 7. Partikel uap & kilau hologram yang naik di sekitar mangkuk
-  for (let i = 0; i < 420; i++) {
+  // 7. Partikel uap
+  for (let i = 0; i < 200; i++) {
     const a = Math.random() * TWO_PI;
     const r = 0.12 + Math.random() * 0.85;
-    const y = Math.random() * 1.45; // di-loop oleh shader secara kontinu
-    push(Math.cos(a) * r, y, Math.sin(a) * r, 0.75 + Math.random() * 0.85, 2);
+    const y = Math.random() * 1.45;
+    push(Math.cos(a) * r, y, Math.sin(a) * r, 0.75 + Math.random() * 0.8, 2);
   }
 
   const geometry = new THREE.BufferGeometry();
@@ -191,17 +180,15 @@ function createHologramPointsMaterial(pixelRatio = 1) {
         float alpha = 0.9;
 
         if (aKind > 1.5) {
-          // Uap & partikel melayang naik terus-menerus
           float cycle = mod(pos.y + uTime * 0.28 + aPhase * 0.23, 1.55);
           pos.y = 0.12 + cycle;
           pos.x += sin(uTime * 1.4 + aPhase) * 0.06;
           pos.z += cos(uTime * 1.2 + aPhase) * 0.06;
-          alpha = smoothstep(0.0, 0.25, cycle) * (1.0 - smoothstep(0.95, 1.55, cycle)) * 0.72;
+          alpha = smoothstep(0.0, 0.25, cycle) * (1.0 - smoothstep(0.95, 1.55, cycle)) * 0.7;
         } else {
-          // Efek scanline hologram naik perlahan + kilau sangat halus
           float scan = 0.5 + 0.5 * sin(pos.y * 18.0 - uTime * 3.8);
-          float twinkle = 0.82 + 0.18 * sin(uTime * 4.5 + aPhase);
-          alpha = (0.68 + 0.32 * scan) * twinkle;
+          float twinkle = 0.84 + 0.16 * sin(uTime * 4.5 + aPhase);
+          alpha = (0.7 + 0.3 * scan) * twinkle;
         }
 
         vAlpha = alpha;
@@ -209,7 +196,7 @@ function createHologramPointsMaterial(pixelRatio = 1) {
 
         vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
         gl_Position = projectionMatrix * mvPosition;
-        gl_PointSize = clamp(aSize * uPixelRatio * (78.0 / -mvPosition.z), 1.5, 15.0);
+        gl_PointSize = clamp(aSize * uPixelRatio * (74.0 / -mvPosition.z), 1.5, 12.0);
       }
     `,
     fragmentShader: /* glsl */ `
@@ -224,12 +211,13 @@ function createHologramPointsMaterial(pixelRatio = 1) {
         float dist = length(uv);
         if (dist > 0.5) discard;
 
-        // Titik glow bulat halus (inti terang + halo cyan)
-        float soft = exp(-dist * dist * 16.0);
-        float core = smoothstep(0.24, 0.0, dist);
+        // Polynomial falloff cepat (tanpa exp()) → jauh lebih enteng di fragment shader
+        float r = 1.0 - dist * 2.0;
+        float soft = r * r;
+        float core = r * r * r;
         vec3 color = mix(uColorMain, uColorCore, core * 0.75 + vMix * 0.2);
 
-        gl_FragColor = vec4(color * 1.15, (soft * 0.48 + core * 0.36) * vAlpha);
+        gl_FragColor = vec4(color * 1.35, (soft * 0.5 + core * 0.35) * vAlpha);
       }
     `,
     transparent: true,
@@ -239,7 +227,7 @@ function createHologramPointsMaterial(pixelRatio = 1) {
 }
 
 function createProjectionBeam(rBottom, rTop, height) {
-  const geo = new THREE.CylinderGeometry(rTop, rBottom, height, 32, 1, true);
+  const geo = new THREE.CylinderGeometry(rTop, rBottom, height, 20, 1, true);
   const mat = new THREE.ShaderMaterial({
     uniforms: {
       uTime: { value: 0 },
@@ -265,11 +253,10 @@ function createProjectionBeam(rBottom, rTop, height) {
       varying vec3 vViewDir;
 
       void main() {
-        // Memudar di pangkal & puncak kerucut + lembut di sisi tepi
         float vertical = smoothstep(0.0, 0.18, vUv.y) * (1.0 - smoothstep(0.35, 1.0, vUv.y));
         float facing = abs(dot(normalize(vNormalView), normalize(vViewDir)));
         float scan = 0.85 + 0.15 * sin(vUv.y * 30.0 - uTime * 3.0);
-        float alpha = vertical * pow(facing, 0.7) * 0.24 * scan;
+        float alpha = vertical * pow(facing, 0.7) * 0.22 * scan;
         gl_FragColor = vec4(uColor, alpha);
       }
     `,
@@ -283,7 +270,7 @@ function createProjectionBeam(rBottom, rTop, height) {
 }
 
 function createEmitterDisc(radius) {
-  const geo = new THREE.CircleGeometry(radius, 40);
+  const geo = new THREE.CircleGeometry(radius, 28);
   geo.rotateX(-Math.PI / 2);
 
   const mat = new THREE.ShaderMaterial({
@@ -304,14 +291,14 @@ function createEmitterDisc(radius) {
       varying vec2 vUv;
 
       void main() {
-        float d = length(vUv - 0.5) * 2.0; // 0 di tengah, 1 di tepi
+        float d = length(vUv - 0.5) * 2.0;
         if (d > 1.0) discard;
 
-        float centerGlow = exp(-d * d * 3.5) * 0.75;
-        float ring1 = smoothstep(0.045, 0.0, abs(d - 0.88));
-        float pulseRing = smoothstep(0.05, 0.0, abs(d - fract(uTime * 0.45))) * (1.0 - d) * 0.6;
-        float alpha = clamp(centerGlow + ring1 * 0.7 + pulseRing, 0.0, 0.9);
-        gl_FragColor = vec4(uColor * 1.2, alpha);
+        float centerGlow = max(0.0, 1.0 - d * d) * 0.65;
+        float ring1 = smoothstep(0.05, 0.0, abs(d - 0.88));
+        float pulseRing = smoothstep(0.05, 0.0, abs(d - fract(uTime * 0.45))) * (1.0 - d) * 0.55;
+        float alpha = clamp(centerGlow + ring1 * 0.65 + pulseRing, 0.0, 0.85);
+        gl_FragColor = vec4(uColor * 1.25, alpha);
       }
     `,
     transparent: true,
@@ -341,35 +328,28 @@ export function createRamenHologram(scene, modelRoot, pixelRatio = 1) {
   group.name = 'ramenHologram';
   group.position.set(center.x, topY, center.z);
 
-  // 1. Piringan cahaya proyektor di permukaan atas silinder
   const emitter = createEmitterDisc(emitterRadius);
   emitter.mesh.position.y = 0.015;
-  emitter.mesh.userData.bloom = true;
   group.add(emitter.mesh);
 
-  // 2. Kerucut sinar hologram yang memancar ke atas
   const beamHeight = 2.05;
   const beam = createProjectionBeam(emitterRadius * 0.88, emitterRadius * 1.95, beamHeight);
   beam.mesh.position.y = beamHeight * 0.5 + 0.01;
-  beam.mesh.userData.bloom = true;
   group.add(beam.mesh);
 
-  // 3. Pivot mangkuk ramen partikel (miring + mengambang + berputar pelan)
   const bowlPivot = new THREE.Group();
   const baseHoverY = 1.48;
   bowlPivot.position.y = baseHoverY;
-  bowlPivot.rotation.set(0.28, 0, -0.18); // miring agar isi mangkuk terlihat dari bawah/samping
+  bowlPivot.rotation.set(0.28, 0, -0.18);
   group.add(bowlPivot);
 
   const bowlGeo = buildRamenBowlGeometry();
   const bowlMat = createHologramPointsMaterial(pixelRatio);
   const bowlPoints = new THREE.Points(bowlGeo, bowlMat);
   bowlPoints.scale.setScalar(1.12);
-  bowlPoints.userData.bloom = true;
   bowlPivot.add(bowlPoints);
 
-  // 4. Cahaya cyan lokal yang menerangi bagian atap di sekitar proyektor (radius pendek)
-  const holoLight = new THREE.PointLight(0x00eaff, 24, 7.0, 2);
+  const holoLight = new THREE.PointLight(0x00eaff, 22, 6.8, 2);
   holoLight.position.set(0, baseHoverY - 0.1, 0);
   group.add(holoLight);
 
@@ -384,7 +364,7 @@ export function createRamenHologram(scene, modelRoot, pixelRatio = 1) {
 
       bowlPoints.rotation.y += 0.42 * dt;
       bowlPivot.position.y = baseHoverY + Math.sin(elapsed * 1.6) * 0.055;
-      holoLight.intensity = 22 + Math.sin(elapsed * 3.2) * 3;
+      holoLight.intensity = 20 + Math.sin(elapsed * 3.2) * 2.5;
     },
   };
 }

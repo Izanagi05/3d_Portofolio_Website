@@ -1,8 +1,8 @@
-// Gaya shader layar: tetap terbaca jernih & tajam dengan selective bloom
+// Gaya shader layar: agak terang sedikit saja, tetap terbaca jelas tanpa silau
 export const SCREEN_STYLE = {
-  big: { contrast: 1.3, emissiveIntensity: 1, exposure: 0.55, brightness: 0.98 },
-  arcade: { contrast: 1.1, emissiveIntensity: 0.9, exposure: 1, brightness: 1 },
-  small: { contrast: 1.1, emissiveIntensity: 0.7, exposure: 1, brightness: 1 },
+  big: { contrast: 1.28, emissiveIntensity: 1, exposure: 0.62, brightness: 1.04 },
+  arcade: { contrast: 1.1, emissiveIntensity: 0.95, exposure: 1, brightness: 1 },
+  small: { contrast: 1.1, emissiveIntensity: 0.85, exposure: 1, brightness: 1 },
 };
 
 export const SCREEN_TEXTURES = {
