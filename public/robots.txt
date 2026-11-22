@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zaaasfood.izanagifaris.my.id/sitemap.xml

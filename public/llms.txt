@@ -1,0 +1,21 @@
+# Zaa's Food (zaaasfood) — 3D Portfolio | Izanagi Faris Aslam
+
+> Interactive 3D Ramen Store Portfolio of **Izanagi Faris Aslam**, Software Engineering & Full Stack Developer from Indonesia.
+
+- **URL:** https://zaaasfood.izanagifaris.my.id/
+- **Main Portfolio:** https://www.izanagifaris.my.id/
+- **Tech Stack:** Three.js, WebGL, GLSL Shaders, GSAP, Blender, Vite
+- **Author:** Izanagi Faris Aslam (`Izanagi05`)
+
+## Interactive Areas
+- **Refrigerator (Kulkas):** Project showcase (`RPLU 18`, `TicTacToe`, `Spline 3D`, `Gunting Kertas Batu`, `MyIntGame`)
+- **TV Monitor:** About Me, Interests, Tech Stack, and social links
+- **Arcade Cabinet:** Credits and retro audio mode
+- **Rooftop Ramen Hologram:** Custom Three.js `Points` particle hologram
+
+## Links
+- Main Portfolio: https://www.izanagifaris.my.id/
+- GitHub: https://github.com/Izanagi05
+- LinkedIn: https://www.linkedin.com/in/izanagi-faris-aslam-2b81842a2/
+- Instagram: https://www.instagram.com/zaa.frsslm
+- Email: mailto:izanagifarisaslam@gmail.com
